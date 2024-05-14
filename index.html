@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Picker App</title>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const ColorPreview = ({ color }) => {
+      const style = {
+        width: '200px',
+        height: '200px',
+        backgroundColor: color || 'transparent',
+      };
+
+      return <div style={style}></div>;
+    };
+
+    const ColorInput = ({ handleColorChange }) => {
+      const [color, setColor] = React.useState('');
+
+      const handleChange = (e) => {
+        const value = e.target.value;
+        // Check if the entered value is a valid HEX color code
+        if (/^#[0-9A-F]{6}$/i.test(value) || value === '') {
+          setColor(value);
+          handleColorChange(value); // Pass the color value to the parent component
+        }
+      };
+
+      return (
+        <input
+          type="text"
+          value={color}
+          onChange={handleChange}
+          placeholder="Enter HEX color code"
+        />
+      );
+    };
+
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { color: '' };
+      }
+
+      handleColorChange = (color) => {
+        this.setState({ color });
+      };
+
+      render() {
+        return (
+          <div>
+            <ColorInput handleColorChange={this.handleColorChange} />
+            <ColorPreview color={this.state.color} />
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
